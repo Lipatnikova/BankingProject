@@ -4,7 +4,7 @@ name: XYZ_BANK
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 jobs:
   build:
 
