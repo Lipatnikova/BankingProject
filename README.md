@@ -8,17 +8,17 @@ _Практикум SDET: задание UI_
 [![dependency - Faker](https://img.shields.io/badge/dependency-Faker-blue)](https://pypi.org/project/Faker)
 [![dependency - allure-pytest](https://img.shields.io/badge/dependency-allure--pytest-blue?logo=qameta&logoColor=white)](https://pypi.org/project/allure-pytest)
 
-Тест-кейсы: [ТЕСТ-КЕЙСЫ]()
+Тест-кейсы: [ТЕСТ-КЕЙСЫ](https://github.com/Lipatnikova/BankingProject/blob/task_ui/TEST_CASES.md)
 
 ALLURE REPORT: [![Allure-report](https://img.shields.io/badge/Allure%20Report-deployed-green)](https://lipatnikova.github.io/task_ui/)
 
-Status of Last Deployment: [![XYZ_BANK](https://github.com/Lipatnikova/task_ui/actions/workflows/xyz_bank_push.yml/badge.svg?branch=)](https://github.com/Lipatnikova/task_ui/actions/workflows/xyz_bank_push.yml)
+Status of Last Deployment: [![XYZ_BANK](https://github.com/Lipatnikova/BankingProject/actions/workflows/xyz_bank_push.yml/badge.svg?branch=)](https://github.com/Lipatnikova/BankingProject/actions/workflows/xyz_bank_push.yml)
 
 ## Как работать с репозиторием в Git Actions:
 
 - Перейти во вкладку Actions репозитория. 
 - Выбрать All workflows -> Automated tests with Allure ("This workflow has a workflow_dispatch event trigger"). 
-- Нажать на кнопку Run workflow и выбрать Choose target: "task_ui". 
+- Нажать на кнопку Run workflow и выбрать Choose target: "ui". 
 - Нажать на кнопку Run workflow.
 
 ## Как работать с репозиторием на ПК:
