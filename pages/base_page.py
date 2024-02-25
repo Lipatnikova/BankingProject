@@ -81,6 +81,14 @@ class BasePage:
         """
         self.element_is_visible(locator).send_keys(key)
 
+    def fill_in_input(self, locator: WebElement or tuple[str, str], key: str) -> None:
+        """This method fills in a specified field with provided value"""
+        input_field = self.element_is_visible(locator)
+        input_field.click()
+        input_field.clear()
+        input_field.send_keys(key)
+        # return input_field
+
     def click_button(self, locator: WebElement or tuple[str, str]) -> None:
         """This method expects to verify that the element is visible,
         displayed on the page, and enabled. The element is present in the DOM tree.
@@ -105,3 +113,11 @@ class BasePage:
         alert_text = alert.text
         alert.accept()
         return alert_text
+
+    def is_present_element(self, locator: WebElement or tuple[str, str]) -> bool:
+        """This method checks the presence of an element on the page"""
+        try:
+            self.element_is_present(locator)
+            return True
+        except TimeoutException:
+            return False

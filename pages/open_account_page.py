@@ -1,6 +1,6 @@
 from selenium.common import TimeoutException
-from pages.base_page import BasePage
 from locators.open_account_locators import OpenAccountLocators as Locator
+from pages.base_page import BasePage
 
 
 class OpenAccountPage(BasePage):

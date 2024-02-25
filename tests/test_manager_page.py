@@ -13,7 +13,7 @@ class TestManagerPage:
 
     @allure.title("Проверка сообщения об успешном добавлении клиента")
     @allure.description("""
-    Цель: Добавить клипента и проверить сообщение об успешном добавлении клиента
+    Цель: Добавить клиента и проверить сообщение об успешном добавлении клиента
         
     Предусловие:
     - Открыть браузер
@@ -71,6 +71,7 @@ class TestManagerPage:
             customers_page = CustomersPage(driver, add_customer_page.get_current_url())
             customers_page.open()
             customers_page.delete_create_customer(first_name)
+            customers_page.verify_delete_customer(first_name)
 
     @allure.title("Проверка данных созданного клиента с данными в таблице Customers")
     @allure.description("""
@@ -148,6 +149,7 @@ class TestManagerPage:
 
         with allure.step("Удалить созданного клиента"):
             customers_page.delete_create_customer(first_name)
+            customers_page.verify_delete_customer(first_name)
 
     @allure.title("Проверка данных созданного клиента с данными в dropdown меню в Open Account")
     @allure.description("""
@@ -219,3 +221,131 @@ class TestManagerPage:
             customers_page = CustomersPage(driver, add_customer_page.get_current_url())
             customers_page.open()
             customers_page.delete_create_customer(first_name)
+            customers_page.verify_delete_customer(first_name)
+
+    @allure.title("Проверка сортировки строк таблицы Customers в обратном алфавитном порядке по First Name")
+    @allure.description("""
+    Цель: Проверить, сортировку по колонке First Name в обратном алфавитном порядке таблицы Customers
+
+    Предусловие:
+    - Открыть браузер
+
+    Шаги:
+    1. Открыть страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager/list 
+    2. Нажать на First Name
+    3. Найти имена в таблице Customers
+    4. Проверить, что в таблице Customers значения в колонке First Name расположены в обратном алфавитном порядке
+
+    Ожидаемый результат:
+    - В таблице Customers значения в колонке First Name расположены в обратном алфавитном порядке""")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.testcase("TC_01.04")
+    @allure.label("owner", "Липатникова А.В.")
+    @pytest.mark.ui
+    def test_verify_sorting_of_the_first_names_in_reverse_alphabetical(self, driver):
+        with allure.step("Открытие страницы globalsqa.com/angularJs-protractor/BankingProject/#/manager/list"):
+            customers_page = CustomersPage(driver, DataUrls.CUSTOMERS_URL)
+            customers_page.open()
+
+        with allure.step("Нажать на First Name"):
+            customers_page.sort_by_first_name_click()
+
+        with allure.step("Найти имена в таблице Customers"):
+            names_list = customers_page.get_rows_customers()
+
+        with allure.step("Проверить, что все значения в колонке First Name в таблице Customer расположены "
+                         "в обратном алфавитном порядке"):
+            assert customers_page.check_reverse_alphabetical_names(names_list), \
+                "Sorting by First name Z-A works incorrect"
+
+    @allure.title("Проверка сортировки строк таблицы Customers в алфавитном порядке")
+    @allure.description("""
+    Цель: Проверить, сортировку по колонке First Name в алфавитном порядке таблицы Customers
+    
+    Предусловие:
+    - Открыть браузер
+
+    Шаги:
+    1. Открыть страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager/list 
+    2. Нажать на First Name
+    3. Нажать на First Name
+    4. Найти имена в таблице Customers
+    5. Проверить, что значения в колонке First Name расположены в алфавитном порядке
+
+    Ожидаемый результат:
+    - В таблице Customers значения в колонке First Name расположены в алфавитном порядке""")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.testcase("TC_01.05")
+    @allure.label("owner", "Липатникова А.В.")
+    @pytest.mark.ui
+    def test_verify_sorting_of_the_first_names_in_alphabetical(self, driver):
+        with allure.step("Открытие страницы globalsqa.com/angularJs-protractor/BankingProject/#/manager/list"):
+            customers_page = CustomersPage(driver, DataUrls.CUSTOMERS_URL)
+            customers_page.open()
+
+        with allure.step("Нажать на First Name"):
+            customers_page.sort_by_first_name_click()
+
+        with allure.step("Нажать на First Name"):
+            customers_page.sort_by_first_name_click()
+
+        with allure.step("Найти имена в таблице Customers"):
+            names_list = customers_page.get_rows_customers()
+
+        with allure.step("Проверить, что значения в колонке First Name расположены в алфавитном порядке"):
+            assert customers_page.check_alphabetical_names(names_list), \
+                "Sorting by First name A-Z works incorrect"
+
+    @allure.title("Проверка удаления сustomers с длиной имени ближнему к среднему арифметическому "
+                  "длин всех имен в колонке First Name")
+    @allure.description("""
+    Цель: Проверить, удаление сustomers с First Name длина которого будет ближе к среднему арифметическому
+
+    Предусловие:
+    - Открыть браузер
+
+    Шаги:
+    1. Открыть страницу https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager/list 
+    2. Найти список Customers до удаления
+    3. Узнать длину каждого имени, затем найти среднее арифметическое получившихся длин
+    4. Удалить клиента с тем именем/именами, у которого(ых) длина будет ближе к среднему арифметическому
+    5. Найти имена в таблице Customers
+    6. Проверить, что количество записей в таблице Customers уменьшилось и соответствует ожидаемому
+
+    Ожидаемый результат:
+    - В таблице Customers удалены клиент(ы) с именем/именами, у которого(ых) длина будет ближе к 
+    среднему арифметическому.
+    - Количество записей в таблице Customers уменьшилось и соответствует ожидаемому""")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.testcase("TC_01.06")
+    @allure.label("owner", "Липатникова А.В.")
+    @pytest.mark.ui
+    def test_delete_customer_by_average_length(self, driver):
+        with allure.step("Открыть страницу Открыть страницу "
+                         "globalsqa.com/angularJs-protractor/BankingProject/#/manager/list"):
+            customers_page = CustomersPage(driver, DataUrls.CUSTOMERS_URL)
+            customers_page.open()
+
+        with allure.step("Найти список Customers до удаления"):
+            customers_list = customers_page.get_rows_customers()
+            len_customers_list_before = len(customers_list)
+
+        with allure.step("Узнать длину каждого имени, затем найти среднее арифметическое получившихся длин"):
+            all_names = customers_page.get_first_names_customers()
+            closest_length_for_del = customers_page.find_closest_name_length(all_names)
+
+        with allure.step("Узнать длину каждого имени, затем найти среднее арифметическое получившихся длин"):
+            indices_for_del = customers_page.find_indices_by_name_length(all_names, closest_length_for_del)
+
+        with allure.step("Удалить клиента(ов) с тем именем/именами, у которого(ых) длина будет ближе к среднему "
+                         "арифметическому"):
+            count_click_del = customers_page.click_delete_by_indices(indices_for_del)
+
+        with allure.step("Найти имена в таблице Customers"):
+            customers_list = customers_page.get_rows_customers()
+
+        with allure.step("Проверить, что количество записей в таблице Customers "
+                         "уменьшилось и соответствует ожидаемому"):
+            len_customers_list_after = len(customers_list)
+            assert len_customers_list_before - count_click_del == len_customers_list_after, \
+                "Deleting customer does not work correctly"
