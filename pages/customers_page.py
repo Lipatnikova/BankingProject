@@ -21,16 +21,14 @@ class CustomersPage(BasePage):
 
     def get_rows_customers(self) -> List:
         """Retrieve rows of customer data from the page.
-            Returns:
-                List: A list containing the rows of customer data retrieved from the page"""
+        :return: List: A list containing the rows of customer data retrieved from the page"""
         customers = self.find_all_rows_customers()
         data = []
         for i in customers:
             data.append(i.text.splitlines())
         return data
 
-    @staticmethod
-    def format_result(data) -> List[List[str]]:
+    def format_result(self, data) -> List[List[str]]:
         """This method removes all "Delete" values from the list of lists"""
         cleaned_data = []
         for sublist in data:
@@ -38,25 +36,25 @@ class CustomersPage(BasePage):
             cleaned_data.append(cleaned_sublist)
         return cleaned_data
 
-    @staticmethod
-    def verify_new_customer_in_list_customers(list1, list2) -> bool:
-        """This method verifies if all items in list1 are present in the first elements of sublists in list2"""
-        for item in list1:
-            if item not in [sublist[0] for sublist in list2]:
+    def verify_new_customer_in_list_customers(self, new_customer_row, list_customers) -> bool:
+        """This method verifies if all items in new_customer are present in
+        the first elements of sublists in list_customers"""
+        for item in new_customer_row:
+            if item not in [sublist[0] for sublist in list_customers]:
                 return False
         return True
 
-    def delete_create_customer(self, first_name) -> None:
+    def delete_create_customer(self, first_name: str) -> None:
         """This method deletes the created customer"""
         self.send_key_in_search(first_name)
         self.click_button_delete()
 
-    def verify_delete_customer(self, first_name):
+    def verify_delete_customer(self, first_name: str):
         """This method sends the First Name value to the Search field and checks
         if the client with such a First Name has been deleted"""
         self.fill_in_input(Locator.SEARCH, first_name)
         assert self.is_present_element(Locator.CUSTOMER) is False, \
-            "The customer has not been deleted"
+            f"The customer with First Name: {first_name} has not been deleted"
 
     @staticmethod
     def check_alphabetical_names(data: List[List[str]]) -> bool:
@@ -82,8 +80,7 @@ class CustomersPage(BasePage):
             data.append(i.text.splitlines())
         return data
 
-    @staticmethod
-    def find_closest_name_length(names: [List[str]]) -> int:
+    def find_closest_name_length(self, names: [List[str]]) -> int:
         """
         Метод находит длину имени клиента, ближней к среднему арифметическому длин всех имен в списке.
         :param names: Список имен.
@@ -104,8 +101,7 @@ class CustomersPage(BasePage):
 
         return closest_length
 
-    @staticmethod
-    def find_indices_by_name_length(names, num):
+    def find_indices_by_name_length(self, names, closest_length):
         """
         Метод находит индексы элементов в списке, ближайших к среднему арифметическому длин всех имен в списке.
         :param names: Список имен, num: Среднеарифтемическая длина имен из списка.
@@ -113,7 +109,7 @@ class CustomersPage(BasePage):
         """
         indices = []
         for i, name in enumerate(names):
-            if len(name[0]) == num:
+            if len(name[0]) == closest_length:
                 indices.append(i)
         return indices
 

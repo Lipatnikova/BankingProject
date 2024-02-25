@@ -87,7 +87,6 @@ class BasePage:
         input_field.click()
         input_field.clear()
         input_field.send_keys(key)
-        # return input_field
 
     def click_button(self, locator: WebElement or tuple[str, str]) -> None:
         """This method expects to verify that the element is visible,
@@ -107,8 +106,9 @@ class BasePage:
                 option.click()
                 break
 
-    def get_alert_text(self) -> str:
-        """This method clicks on the element"""
+    def fetch_and_accept_alert_text(self) -> str:
+        """Fetches the text of an alert dialog and accepts the alert.
+        :return: str: The text content of the alert dialog."""
         alert = self.driver.switch_to.alert
         alert_text = alert.text
         alert.accept()

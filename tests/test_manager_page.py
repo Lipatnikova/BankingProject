@@ -3,6 +3,7 @@ import pytest
 
 from data.data import DataAddCustomer
 from data.data_urls import DataUrls
+from generator.generator import get_customer
 from pages.add_customer_page import AddCustomerPage
 from pages.customers_page import CustomersPage
 from pages.manager_page import ManagerPage
@@ -40,7 +41,11 @@ class TestManagerPage:
     @allure.testcase("TC_01.01")
     @allure.label("owner", "Липатникова А.В.")
     @pytest.mark.ui
-    def test_verify_alert_message_after_customer_add(self, driver):
+    def test_verify_alert_message_after_customer_add(self, driver, delete_customer):
+        info = next(get_customer())
+        first_name = info.first_name
+        last_name = info.last_name
+        post_code = info.post_code
 
         with allure.step("Открытие страницы globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
             manager_page = ManagerPage(driver, DataUrls.MANAGER_URL)
@@ -51,27 +56,22 @@ class TestManagerPage:
             add_customer_page = AddCustomerPage(driver, manager_page.get_current_url())
 
         with allure.step("Заполнить поле Post Code"):
-            post_code = add_customer_page.fill_post_code()
+            add_customer_page.fill_post_code(post_code)
 
         with allure.step("Заполнить поле First Name"):
-            first_name = add_customer_page.fill_first_name(post_code)
+            add_customer_page.fill_first_name(first_name)
 
         with allure.step("Заполнить поле Last Name"):
-            add_customer_page.fill_last_name()
+            add_customer_page.fill_last_name(last_name)
 
         with allure.step("Нажать кнопку Add Customer"):
             add_customer_page.click_add_customer_button()
 
         with allure.step("Проверить сообщение об успешном добавлении клиента"):
-            assert DataAddCustomer.MSG_SUCCESS in add_customer_page.get_alert_text(), \
+            assert DataAddCustomer.MSG_SUCCESS in add_customer_page.fetch_and_accept_alert_text(), \
                 "The expected message about the successful addition of the Customer is not displayed correctly"
 
-        with allure.step("Удалить созданного клиента"):
-            manager_page.click_button_customers()
-            customers_page = CustomersPage(driver, add_customer_page.get_current_url())
-            customers_page.open()
-            customers_page.delete_create_customer(first_name)
-            customers_page.verify_delete_customer(first_name)
+        delete_customer(first_name)
 
     @allure.title("Проверка данных созданного клиента с данными в таблице Customers")
     @allure.description("""
@@ -105,7 +105,12 @@ class TestManagerPage:
     @allure.testcase("TC_01.02")
     @allure.label("owner", "Липатникова А.В.")
     @pytest.mark.ui
-    def test_add_customer_and_verify_customer_in_table_customers(self, driver):
+    def test_add_customer_and_verify_customer_in_table_customers(self, driver, delete_customer):
+        info = next(get_customer())
+        first_name = info.first_name
+        last_name = info.last_name
+        post_code = info.post_code
+
         with allure.step("Открытие страницы globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
             manager_page = ManagerPage(driver, DataUrls.MANAGER_URL)
             manager_page.open()
@@ -117,20 +122,20 @@ class TestManagerPage:
             add_customer_page = AddCustomerPage(driver, manager_page.get_current_url())
 
         with allure.step("Заполнить поле Post Code"):
-            post_code = add_customer_page.fill_post_code()
+            add_customer_page.fill_post_code(post_code)
 
         with allure.step("Заполнить поле First Name"):
-            first_name = add_customer_page.fill_first_name(post_code)
+            add_customer_page.fill_first_name(first_name)
 
         with allure.step("Заполнить поле Last Name"):
-            last_name = add_customer_page.fill_last_name()
+            add_customer_page.fill_last_name(last_name)
             expected_list = [f'{first_name} {last_name} {post_code}']
 
         with allure.step("Нажать кнопку Add Customer"):
             add_customer_page.click_add_customer_button()
 
         with allure.step("В сообщении об успешном добавлении клиента нажать кнопку ОК"):
-            add_customer_page.get_alert_text()
+            add_customer_page.fetch_and_accept_alert_text()
 
         with allure.step("Нажать кнопку Customers"):
             manager_page.click_button_customers()
@@ -145,11 +150,11 @@ class TestManagerPage:
 
         with allure.step("Проверить, что клиент с First_name, Last_name, Post_code "
                          "введенными при добавлении клиента,  отображается в таблице Customers"):
-            assert customers_page.verify_new_customer_in_list_customers(expected_list, customers_list)
+            assert customers_page.verify_new_customer_in_list_customers(expected_list, customers_list), \
+                "The Customers table does not contain a customer with First_name, Last_name, " \
+                "Post_code entered when adding a customer"
 
-        with allure.step("Удалить созданного клиента"):
-            customers_page.delete_create_customer(first_name)
-            customers_page.verify_delete_customer(first_name)
+        delete_customer(first_name)
 
     @allure.title("Проверка данных созданного клиента с данными в dropdown меню в Open Account")
     @allure.description("""
@@ -180,7 +185,12 @@ class TestManagerPage:
     @allure.testcase("TC_01.03")
     @allure.label("owner", "Липатникова А.В.")
     @pytest.mark.ui
-    def test_add_customer_and_verify_customer_in_dropdown_menu_in_open_account(self, driver):
+    def test_add_customer_and_verify_customer_in_dropdown_menu_in_open_account(self, driver, delete_customer):
+        info = next(get_customer())
+        first_name = info.first_name
+        last_name = info.last_name
+        post_code = info.post_code
+
         with allure.step("Открытие страницы globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
             manager_page = ManagerPage(driver, DataUrls.MANAGER_URL)
             manager_page.open()
@@ -192,20 +202,20 @@ class TestManagerPage:
             add_customer_page = AddCustomerPage(driver, manager_page.get_current_url())
 
         with allure.step("Заполнить поле Post Code"):
-            post_code = add_customer_page.fill_post_code()
+            add_customer_page.fill_post_code(post_code)
 
         with allure.step("Заполнить поле First Name"):
-            first_name = add_customer_page.fill_first_name(post_code)
+            add_customer_page.fill_first_name(first_name)
 
         with allure.step("Заполнить поле Last Name"):
-            last_name = add_customer_page.fill_last_name()
+            add_customer_page.fill_last_name(last_name)
             expected_name = f'{first_name} {last_name}'
 
         with allure.step("Нажать кнопку Add Customer"):
             add_customer_page.click_add_customer_button()
 
         with allure.step("В сообщении об успешном добавлении клиента нажать кнопку ОК"):
-            add_customer_page.get_alert_text()
+            add_customer_page.fetch_and_accept_alert_text()
 
         with allure.step("Нажать кнопку Open Account"):
             manager_page.click_button_open_account()
@@ -216,12 +226,7 @@ class TestManagerPage:
             assert open_account_page.find_name_in_dropdown(expected_name), \
                 "The expected name was not found in the dropdown menu"
 
-        with allure.step("Удалить созданного клиента"):
-            manager_page.click_button_customers()
-            customers_page = CustomersPage(driver, add_customer_page.get_current_url())
-            customers_page.open()
-            customers_page.delete_create_customer(first_name)
-            customers_page.verify_delete_customer(first_name)
+        delete_customer(first_name)
 
     @allure.title("Проверка сортировки строк таблицы Customers в обратном алфавитном порядке по First Name")
     @allure.description("""
@@ -348,4 +353,4 @@ class TestManagerPage:
                          "уменьшилось и соответствует ожидаемому"):
             len_customers_list_after = len(customers_list)
             assert len_customers_list_before - count_click_del == len_customers_list_after, \
-                "Deleting customer does not work correctly"
+                "The count of customers after deletion does not match the calculated value"
