@@ -10,7 +10,7 @@ _Практикум SDET: задание UI_
 
 Тест-кейсы: [ТЕСТ-КЕЙСЫ](https://github.com/Lipatnikova/BankingProject/blob/task_ui/TEST_CASES.md)
 
-ALLURE REPORT: [![Allure-report](https://img.shields.io/badge/Allure%20Report-deployed-green)](https://lipatnikova.github.io/task_ui/)
+ALLURE REPORT: [![Allure-report](https://img.shields.io/badge/Allure%20Report-deployed-green)](https://lipatnikova.github.io/BankingProject/)
 
 Status of Last Deployment: [![XYZ_BANK](https://github.com/Lipatnikova/BankingProject/actions/workflows/xyz_bank_push.yml/badge.svg?branch=)](https://github.com/Lipatnikova/BankingProject/actions/workflows/xyz_bank_push.yml)
 
@@ -18,7 +18,7 @@ Status of Last Deployment: [![XYZ_BANK](https://github.com/Lipatnikova/BankingPr
 
 - Перейти во вкладку Actions репозитория. 
 - Выбрать All workflows -> Automated tests with Allure ("This workflow has a workflow_dispatch event trigger"). 
-- Нажать на кнопку Run workflow и выбрать Choose target: "ui". 
+- Нажать на кнопку Run workflow, выбрать Branch и Choose target: "ui". 
 - Нажать на кнопку Run workflow.
 
 ## Как работать с репозиторием на ПК:
